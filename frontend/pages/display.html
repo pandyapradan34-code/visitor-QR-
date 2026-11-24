@@ -1,1 +1,176 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Slideshow Display</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"><link rel="stylesheet" href="/css/style.css"></head><body class="display-body"><div id="empty" class="empty-display"><h1>Visitor Photo Slideshow</h1><p>Waiting for the next photo...</p></div><div id="slide" class="slide d-none"><img id="slideImg"><div class="caption"><h2 id="visitorName"></h2><p>Welcome!</p></div></div><script src="/js/display.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Visitor Moments | Live Display</title>
+
+    <link
+        rel="stylesheet"
+        href="/css/display.css"
+    >
+
+</head>
+
+
+<body class="display-body">
+
+
+    <!-- Brand -->
+    <header class="display-header">
+
+        <div class="display-brand">
+
+            <div class="display-logo">
+                VM
+            </div>
+
+            <div>
+
+                <div class="display-brand-name">
+                    Visitor Moments
+                </div>
+
+                <div class="display-brand-subtitle">
+                    Capture · Share · Remember
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="live-status">
+
+            <span class="live-dot"></span>
+
+            <span>LIVE</span>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- Empty State -->
+    <section
+        id="empty"
+        class="empty-display"
+    >
+
+        <div class="empty-content">
+
+            <div class="empty-icon">
+                📸
+            </div>
+
+            <h1>
+                Visitor Moments
+            </h1>
+
+            <p>
+                Waiting for the next visitor photo...
+            </p>
+
+            <div class="waiting-indicator">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- Slideshow -->
+    <main
+        id="slide"
+        class="slide d-none"
+    >
+
+        <div class="photo-container">
+
+            <img
+                id="slideImg"
+                src=""
+                alt="Visitor photo"
+            >
+
+        </div>
+
+
+        <div class="photo-overlay"></div>
+
+
+        <div class="photo-caption">
+
+            <div class="welcome-label">
+                WELCOME
+            </div>
+
+            <h1 id="visitorName">
+            </h1>
+
+            <p>
+                Thank you for being part of
+                our special moments.
+            </p>
+
+        </div>
+
+
+        <div class="photo-counter">
+
+            <span id="currentPhoto">
+                1
+            </span>
+
+            <span class="counter-divider">
+                /
+            </span>
+
+            <span id="totalPhotos">
+                1
+            </span>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- Footer -->
+    <footer class="display-footer">
+
+        <span>
+            Visitor Moments
+        </span>
+
+        <span>
+            •
+        </span>
+
+        <span>
+            Live Visitor Slideshow
+        </span>
+
+    </footer>
+
+
+
+    <script src="/js/display.js"></script>
+
+</body>
+
+</html>

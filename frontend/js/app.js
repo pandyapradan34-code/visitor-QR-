@@ -8,14 +8,19 @@ const uploadBox = document.getElementById("uploadBox");
 const uploadForm = document.getElementById("uploadForm");
 
 const photosInput = document.getElementById("photos");
+const cameraInput = document.getElementById("cameraInput");
 const consent = document.getElementById("consent");
 
 const msgEl = document.getElementById("msg");
 
-const registrationStep = document.getElementById("registrationStep");
-const successStep = document.getElementById("successStep");
+const registrationStep =
+    document.getElementById("registrationStep");
 
-const photoStep = document.getElementById("photoStep");
+const successStep =
+    document.getElementById("successStep");
+
+const photoStep =
+    document.getElementById("photoStep");
 
 const previewContainer =
     document.getElementById("previewContainer");
@@ -37,6 +42,13 @@ const uploadArea =
 
 
 /* =========================================
+   SELECTED FILES
+========================================= */
+
+let selectedFiles = [];
+
+
+/* =========================================
    VISITOR REGISTRATION
 ========================================= */
 
@@ -48,12 +60,22 @@ form.addEventListener("submit", async (e) => {
     const phone = phoneInput.value.trim();
 
     if (!name || !phone) {
-        msg("Please enter your name and mobile number.", "danger");
+
+        msg(
+            "Please enter your name and mobile number.",
+            "danger"
+        );
+
         return;
     }
 
     if (phone.length < 7) {
-        msg("Please enter a valid mobile number.", "danger");
+
+        msg(
+            "Please enter a valid mobile number.",
+            "danger"
+        );
+
         return;
     }
 
@@ -65,32 +87,30 @@ form.addEventListener("submit", async (e) => {
 
     try {
 
-        const response = await fetch("/api/visitors", {
-            method: "POST",
+        const response = await fetch(
+            "/api/visitors",
+            {
+                method: "POST",
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-            body: JSON.stringify({
-                name: name,
-                phone: phone
-            })
-        });
+                body: JSON.stringify({
+                    name: name,
+                    phone: phone
+                })
+            }
+        );
 
         const data = await response.json();
 
         if (!response.ok) {
 
             msg(
-                data.message || "Unable to register visitor.",
+                data.message ||
+                "Unable to register visitor.",
                 "danger"
-            );
-
-            setButtonLoading(
-                continueButton,
-                false,
-                "Continue"
             );
 
             return;
@@ -104,9 +124,12 @@ form.addEventListener("submit", async (e) => {
 
         photoStep.classList.add("active");
 
-        document
-            .querySelector(".progress-step")
-            .classList.add("completed");
+        const firstStep =
+            document.querySelector(".progress-step");
+
+        if (firstStep) {
+            firstStep.classList.add("completed");
+        }
 
         msg(
             data.returning
@@ -136,14 +159,75 @@ form.addEventListener("submit", async (e) => {
 
 
 /* =========================================
-   PHOTO SELECTION
+   NORMAL PHOTO SELECTION
 ========================================= */
 
 photosInput.addEventListener("change", () => {
 
-    const files = [...photosInput.files];
+    const files = [
+        ...photosInput.files
+    ];
 
-    validateAndPreview(files);
+    selectedFiles = files;
+
+    validateAndPreview(selectedFiles);
+});
+
+
+/* =========================================
+   CAMERA PHOTO
+========================================= */
+
+cameraInput.addEventListener("change", () => {
+
+    const files = [
+        ...cameraInput.files
+    ];
+
+    if (!files.length) {
+        return;
+    }
+
+    /*
+     * Add the camera photo to the existing
+     * selected photos instead of replacing them.
+     */
+    selectedFiles = [
+        ...selectedFiles,
+        ...files
+    ];
+
+    /*
+     * Maximum 10 photos.
+     */
+    if (selectedFiles.length > 10) {
+
+        msg(
+            "You can upload a maximum of 10 photos at once.",
+            "danger"
+        );
+
+        selectedFiles =
+            selectedFiles.slice(0, 10);
+
+        syncFilesInput();
+
+        validateAndPreview(selectedFiles);
+
+        cameraInput.value = "";
+
+        return;
+    }
+
+    syncFilesInput();
+
+    validateAndPreview(selectedFiles);
+
+    /*
+     * Clear camera input so the same
+     * camera action can be used again.
+     */
+    cameraInput.value = "";
 });
 
 
@@ -171,18 +255,34 @@ uploadArea.addEventListener("drop", (e) => {
 
     uploadArea.classList.remove("dragging");
 
-    const files = [...e.dataTransfer.files];
+    const files = [
+        ...e.dataTransfer.files
+    ];
 
-    validateAndPreview(files);
+    selectedFiles = files;
 
-    const dataTransfer = new DataTransfer();
+    syncFilesInput();
 
-    files.forEach(file => {
+    validateAndPreview(selectedFiles);
+});
+
+
+/* =========================================
+   SYNC FILE INPUT
+========================================= */
+
+function syncFilesInput() {
+
+    const dataTransfer =
+        new DataTransfer();
+
+    selectedFiles.forEach(file => {
         dataTransfer.items.add(file);
     });
 
-    photosInput.files = dataTransfer.files;
-});
+    photosInput.files =
+        dataTransfer.files;
+}
 
 
 /* =========================================
@@ -206,7 +306,11 @@ function validateAndPreview(files) {
             "danger"
         );
 
+        selectedFiles = [];
+
         photosInput.value = "";
+
+        cameraInput.value = "";
 
         previewContainer.classList.add("d-none");
 
@@ -230,7 +334,11 @@ function validateAndPreview(files) {
                 "danger"
             );
 
+            selectedFiles = [];
+
             photosInput.value = "";
+
+            cameraInput.value = "";
 
             previewContainer.classList.add("d-none");
 
@@ -245,7 +353,11 @@ function validateAndPreview(files) {
                 "danger"
             );
 
+            selectedFiles = [];
+
             photosInput.value = "";
+
+            cameraInput.value = "";
 
             previewContainer.classList.add("d-none");
 
@@ -264,14 +376,16 @@ function validateAndPreview(files) {
 
     files.forEach((file, index) => {
 
-        const reader = new FileReader();
+        const reader =
+            new FileReader();
 
         reader.onload = (e) => {
 
             const item =
                 document.createElement("div");
 
-            item.className = "preview-item";
+            item.className =
+                "preview-item";
 
             item.innerHTML = `
                 <img
@@ -326,13 +440,10 @@ uploadForm.addEventListener("submit", async (e) => {
     }
 
 
-    const files = [...photosInput.files];
-
-
-    if (!files.length) {
+    if (!selectedFiles.length) {
 
         msg(
-            "Please select at least one photo.",
+            "Please take a selfie or select at least one photo.",
             "warning"
         );
 
@@ -340,12 +451,15 @@ uploadForm.addEventListener("submit", async (e) => {
     }
 
 
-    const formData = new FormData();
+    const formData =
+        new FormData();
+
 
     formData.append(
         "visitor_id",
         visitorId
     );
+
 
     formData.append(
         "consent",
@@ -353,12 +467,13 @@ uploadForm.addEventListener("submit", async (e) => {
     );
 
 
-    files.forEach(file => {
+    selectedFiles.forEach(file => {
 
         formData.append(
             "photos",
             file
         );
+
     });
 
 
@@ -371,22 +486,25 @@ uploadForm.addEventListener("submit", async (e) => {
 
     try {
 
-        const response = await fetch(
-            "/api/photos",
-            {
-                method: "POST",
-                body: formData
-            }
-        );
+        const response =
+            await fetch(
+                "/api/photos",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
 
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
 
         if (!response.ok) {
 
             msg(
-                data.message || "Photo upload failed.",
+                data.message ||
+                "Photo upload failed.",
                 "danger"
             );
 
@@ -402,7 +520,9 @@ uploadForm.addEventListener("submit", async (e) => {
         document
             .querySelectorAll(".progress-step")
             .forEach(step => {
+
                 step.classList.add("completed");
+
             });
 
 
@@ -439,7 +559,9 @@ function setButtonLoading(
     text
 ) {
 
-    if (!button) return;
+    if (!button) {
+        return;
+    }
 
 
     if (loading) {

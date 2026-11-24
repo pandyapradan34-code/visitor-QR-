@@ -30,11 +30,6 @@
                 <div class="brand-subtitle">Capture · Share · Remember</div>
             </div>
         </div>
-
-        <a href="/display" class="display-link" target="_blank">
-            <span class="live-dot"></span>
-            View Display
-        </a>
     </nav>
 
 
@@ -56,8 +51,8 @@
                 </h1>
 
                 <p class="welcome-text">
-                    Upload your photos and let them become part
-                    of our visitor slideshow.
+                    Capture your selfie or upload your photos
+                    and let them become part of our visitor slideshow.
                 </p>
 
                 <div class="feature-list">
@@ -66,8 +61,11 @@
                         <div class="feature-icon">📸</div>
 
                         <div>
-                            <h6>Share your photos</h6>
-                            <p>Upload your favorite moments with us.</p>
+                            <h6>Take a selfie</h6>
+                            <p>
+                                Use your phone camera to capture
+                                your visit instantly.
+                            </p>
                         </div>
                     </div>
 
@@ -76,7 +74,10 @@
 
                         <div>
                             <h6>See them on display</h6>
-                            <p>Your approved photos can appear on our live display.</p>
+                            <p>
+                                Your approved photos can appear
+                                on our live display.
+                            </p>
                         </div>
                     </div>
 
@@ -85,7 +86,10 @@
 
                         <div>
                             <h6>Your permission matters</h6>
-                            <p>Photos are displayed only after your consent.</p>
+                            <p>
+                                Photos are displayed only after
+                                your consent.
+                            </p>
                         </div>
                     </div>
 
@@ -126,13 +130,19 @@
                 <div id="registrationStep">
 
                     <div class="form-heading">
-                        <span class="section-label">STEP 01</span>
 
-                        <h2>Tell us about yourself</h2>
+                        <span class="section-label">
+                            STEP 01
+                        </span>
+
+                        <h2>
+                            Tell us about yourself
+                        </h2>
 
                         <p>
                             Enter your details to get started.
                         </p>
+
                     </div>
 
 
@@ -145,7 +155,10 @@
                             </label>
 
                             <div class="input-wrapper">
-                                <span class="input-icon">👤</span>
+
+                                <span class="input-icon">
+                                    👤
+                                </span>
 
                                 <input
                                     type="text"
@@ -156,6 +169,7 @@
                                     autocomplete="name"
                                     required
                                 >
+
                             </div>
 
                         </div>
@@ -168,7 +182,10 @@
                             </label>
 
                             <div class="input-wrapper">
-                                <span class="input-icon">📱</span>
+
+                                <span class="input-icon">
+                                    📱
+                                </span>
 
                                 <input
                                     type="tel"
@@ -179,10 +196,12 @@
                                     autocomplete="tel"
                                     required
                                 >
+
                             </div>
 
                             <small>
-                                We use your mobile number to recognize returning visitors.
+                                We use your mobile number to recognize
+                                returning visitors.
                             </small>
 
                         </div>
@@ -210,18 +229,58 @@
 
                     <div class="form-heading">
 
-                        <span class="section-label">STEP 02</span>
+                        <span class="section-label">
+                            STEP 02
+                        </span>
 
-                        <h2>Share your photos</h2>
+                        <h2>
+                            Share your photos
+                        </h2>
 
                         <p>
-                            Choose the moments you'd like to share.
+                            Take a selfie or choose photos
+                            from your device.
                         </p>
 
                     </div>
 
 
                     <form id="uploadForm">
+
+                        <!-- Camera Capture -->
+                        <div class="camera-section">
+
+                            <label
+                                for="cameraInput"
+                                class="camera-button"
+                            >
+
+                                <span class="camera-icon">
+                                    📷
+                                </span>
+
+                                <div>
+                                    <strong>
+                                        Take a Selfie
+                                    </strong>
+
+                                    <small>
+                                        Open your camera and capture a photo
+                                    </small>
+                                </div>
+
+                            </label>
+
+                            <input
+                                type="file"
+                                id="cameraInput"
+                                accept="image/*"
+                                capture="user"
+                                hidden
+                            >
+
+                        </div>
+
 
                         <!-- Upload Area -->
                         <label
@@ -233,10 +292,13 @@
                                 ↑
                             </div>
 
-                            <h4>Upload your photos</h4>
+                            <h4>
+                                Upload your photos
+                            </h4>
 
                             <p>
-                                Click here to choose photos from your device
+                                Click here to choose photos
+                                from your device
                             </p>
 
                             <span class="browse-button">
@@ -244,7 +306,9 @@
                             </span>
 
                             <div class="upload-info">
-                                JPG · PNG · WEBP &nbsp;•&nbsp; Max 5 MB each
+                                JPG · PNG · WEBP
+                                &nbsp;•&nbsp;
+                                Max 5 MB each
                             </div>
 
                         </label>
@@ -268,11 +332,19 @@
                         >
 
                             <div class="preview-heading">
-                                <span>Selected Photos</span>
+
+                                <span>
+                                    Selected Photos
+                                </span>
+
                                 <span id="photoCount"></span>
+
                             </div>
 
-                            <div id="previewGrid" class="preview-grid"></div>
+                            <div
+                                id="previewGrid"
+                                class="preview-grid"
+                            ></div>
 
                         </div>
 
@@ -287,8 +359,11 @@
                             >
 
                             <label for="consent">
-                                I give permission for my uploaded photos
-                                to be displayed publicly on the visitor slideshow.
+
+                                I give permission for my uploaded
+                                photos to be displayed publicly
+                                on the visitor slideshow.
+
                             </label>
 
                         </div>
@@ -299,8 +374,15 @@
                             class="primary-button"
                             id="uploadButton"
                         >
-                            <span>Upload Photos</span>
-                            <span class="button-arrow">→</span>
+
+                            <span>
+                                Upload Photos
+                            </span>
+
+                            <span class="button-arrow">
+                                →
+                            </span>
+
                         </button>
 
                     </form>
@@ -318,16 +400,23 @@
                         ✓
                     </div>
 
-                    <span class="section-label">COMPLETE</span>
+                    <span class="section-label">
+                        COMPLETE
+                    </span>
 
-                    <h2>You're all set!</h2>
+                    <h2>
+                        You're all set!
+                    </h2>
 
                     <p>
                         Your photos have been uploaded successfully
                         and added to the visitor display.
                     </p>
 
-                    <a href="/" class="secondary-button">
+                    <a
+                        href="/"
+                        class="secondary-button"
+                    >
                         Register Another Visitor
                     </a>
 
@@ -335,7 +424,10 @@
 
 
                 <!-- Message -->
-                <div id="msg" class="message-container"></div>
+                <div
+                    id="msg"
+                    class="message-container"
+                ></div>
 
             </section>
 
@@ -346,23 +438,23 @@
 
     <!-- Footer -->
     <footer class="page-footer">
-        <span>Visitor Moments</span>
-        <span>•</span>
-        <span>Your moments. Our memories.</span>
+
+        <span>
+            Visitor Moments
+        </span>
+
+        <span>
+            •
+        </span>
+
+        <span>
+            Your moments. Our memories.
+        </span>
+
     </footer>
-    <nav class="topbar">
-    <div class="brand">
-        <div class="brand-icon">VM</div>
-
-        <div>
-            <div class="brand-name">Visitor Moments</div>
-            <div class="brand-subtitle">Capture · Share · Remember</div>
-        </div>
-    </div>
-</nav>
-    
 
 
+    <!-- JavaScript -->
     <script src="/js/app.js"></script>
 
 </body>
