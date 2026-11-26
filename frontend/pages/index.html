@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,451 +11,373 @@
         rel="stylesheet"
     >
 
-    <link
-        rel="stylesheet"
-        href="/css/style.css"
-    >
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
-<body class="visitor-page">
+<body>
 
-    <!-- Navigation -->
-    <nav class="topbar">
-        <div class="brand">
-            <div class="brand-icon">VM</div>
+<!-- =========================
+     TOP NAVBAR
+========================= -->
 
-            <div>
-                <div class="brand-name">Visitor Moments</div>
-                <div class="brand-subtitle">Capture · Share · Remember</div>
-            </div>
+<nav class="topbar">
+    <div class="brand">
+        <div class="brand-icon">📸</div>
+
+        <div>
+            <h2>Visitor Moments</h2>
+            <p>Share your moment with us</p>
         </div>
-    </nav>
+    </div>
+</nav>
 
 
-    <!-- Main Content -->
-    <main class="main-wrapper">
+<!-- =========================
+     MAIN CONTAINER
+========================= -->
 
-        <div class="registration-container">
+<main class="main-container">
 
-            <!-- Left Information Panel -->
-            <section class="welcome-panel">
+    <!-- =========================
+         WELCOME SECTION
+    ========================== -->
 
-                <div class="welcome-badge">
-                    <span>●</span> Welcome
+    <section class="welcome-section">
+
+        <div class="welcome-icon">
+            👋
+        </div>
+
+        <h1>Welcome!</h1>
+
+        <p>
+            Register yourself and share your photos.
+            Your memories may appear on our display.
+        </p>
+
+    </section>
+
+
+    <!-- =========================
+         VISITOR FORM
+    ========================== -->
+
+    <section class="card-section">
+
+        <form id="visitorForm">
+
+            <div class="section-title">
+                <span>👤</span>
+                <div>
+                    <h3>Visitor Information</h3>
+                    <p>Tell us a little about yourself</p>
                 </div>
-
-                <h1>
-                    Share your
-                    <span>special moments.</span>
-                </h1>
-
-                <p class="welcome-text">
-                    Capture your selfie or upload your photos
-                    and let them become part of our visitor slideshow.
-                </p>
-
-                <div class="feature-list">
-
-                    <div class="feature-item">
-                        <div class="feature-icon">📸</div>
-
-                        <div>
-                            <h6>Take a selfie</h6>
-                            <p>
-                                Use your phone camera to capture
-                                your visit instantly.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="feature-item">
-                        <div class="feature-icon">✨</div>
-
-                        <div>
-                            <h6>See them on display</h6>
-                            <p>
-                                Your approved photos can appear
-                                on our live display.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="feature-item">
-                        <div class="feature-icon">🔒</div>
-
-                        <div>
-                            <h6>Your permission matters</h6>
-                            <p>
-                                Photos are displayed only after
-                                your consent.
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
-
-            </section>
+            </div>
 
 
-            <!-- Registration Card -->
-            <section class="form-panel">
+            <!-- NAME -->
 
-                <!-- Progress -->
-                <div class="progress-header">
+            <div class="form-group">
 
-                    <div class="progress-step active">
-                        <div class="step-number">1</div>
-                        <span>Details</span>
-                    </div>
+                <label for="name">
+                    Full Name
+                </label>
 
-                    <div class="progress-line"></div>
-
-                    <div class="progress-step" id="photoStep">
-                        <div class="step-number">2</div>
-                        <span>Photos</span>
-                    </div>
-
-                    <div class="progress-line"></div>
-
-                    <div class="progress-step">
-                        <div class="step-number">3</div>
-                        <span>Complete</span>
-                    </div>
-
-                </div>
-
-
-                <!-- Step 1 -->
-                <div id="registrationStep">
-
-                    <div class="form-heading">
-
-                        <span class="section-label">
-                            STEP 01
-                        </span>
-
-                        <h2>
-                            Tell us about yourself
-                        </h2>
-
-                        <p>
-                            Enter your details to get started.
-                        </p>
-
-                    </div>
-
-
-                    <form id="visitorForm">
-
-                        <div class="input-group-custom">
-
-                            <label for="name">
-                                Full Name
-                            </label>
-
-                            <div class="input-wrapper">
-
-                                <span class="input-icon">
-                                    👤
-                                </span>
-
-                                <input
-                                    type="text"
-                                    id="name"
-                                    class="custom-input"
-                                    placeholder="Enter your full name"
-                                    maxlength="100"
-                                    autocomplete="name"
-                                    required
-                                >
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="input-group-custom">
-
-                            <label for="phone">
-                                Mobile Number
-                            </label>
-
-                            <div class="input-wrapper">
-
-                                <span class="input-icon">
-                                    📱
-                                </span>
-
-                                <input
-                                    type="tel"
-                                    id="phone"
-                                    class="custom-input"
-                                    placeholder="Enter your mobile number"
-                                    maxlength="20"
-                                    autocomplete="tel"
-                                    required
-                                >
-
-                            </div>
-
-                            <small>
-                                We use your mobile number to recognize
-                                returning visitors.
-                            </small>
-
-                        </div>
-
-
-                        <button
-                            type="submit"
-                            class="primary-button"
-                            id="continueButton"
-                        >
-                            <span>Continue</span>
-                            <span class="button-arrow">→</span>
-                        </button>
-
-                    </form>
-
-                </div>
-
-
-                <!-- Step 2 -->
-                <div
-                    id="uploadBox"
-                    class="upload-step d-none"
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    class="form-control"
+                    placeholder="Enter your name"
+                    required
                 >
 
-                    <div class="form-heading">
+            </div>
 
-                        <span class="section-label">
-                            STEP 02
-                        </span>
 
-                        <h2>
-                            Share your photos
-                        </h2>
+            <!-- PHONE -->
+
+            <div class="form-group">
+
+                <label for="phone">
+                    Mobile Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    class="form-control"
+                    placeholder="Enter your mobile number"
+                    maxlength="10"
+                    required
+                >
+
+            </div>
+
+
+            <!-- =========================
+                 CAMERA SECTION
+            ========================== -->
+
+            <div class="camera-section">
+
+                <div class="section-title">
+
+                    <span>📷</span>
+
+                    <div>
+                        <h3>Take a Selfie</h3>
 
                         <p>
-                            Take a selfie or choose photos
-                            from your device.
+                            Open your camera and capture your photo
                         </p>
-
                     </div>
-
-
-                    <form id="uploadForm">
-
-                        <!-- Camera Capture -->
-                        <div class="camera-section">
-
-                            <label
-                                for="cameraInput"
-                                class="camera-button"
-                            >
-
-                                <span class="camera-icon">
-                                    📷
-                                </span>
-
-                                <div>
-                                    <strong>
-                                        Take a Selfie
-                                    </strong>
-
-                                    <small>
-                                        Open your camera and capture a photo
-                                    </small>
-                                </div>
-
-                            </label>
-
-                            <input
-                                type="file"
-                                id="cameraInput"
-                                accept="image/*"
-                                capture="user"
-                                hidden
-                            >
-
-                        </div>
-
-
-                        <!-- Upload Area -->
-                        <label
-                            for="photos"
-                            class="upload-area"
-                        >
-
-                            <div class="upload-icon">
-                                ↑
-                            </div>
-
-                            <h4>
-                                Upload your photos
-                            </h4>
-
-                            <p>
-                                Click here to choose photos
-                                from your device
-                            </p>
-
-                            <span class="browse-button">
-                                Choose Photos
-                            </span>
-
-                            <div class="upload-info">
-                                JPG · PNG · WEBP
-                                &nbsp;•&nbsp;
-                                Max 5 MB each
-                            </div>
-
-                        </label>
-
-
-                        <input
-                            type="file"
-                            id="photos"
-                            name="photos"
-                            accept="image/jpeg,image/png,image/webp"
-                            multiple
-                            required
-                            hidden
-                        >
-
-
-                        <!-- Preview -->
-                        <div
-                            id="previewContainer"
-                            class="preview-container d-none"
-                        >
-
-                            <div class="preview-heading">
-
-                                <span>
-                                    Selected Photos
-                                </span>
-
-                                <span id="photoCount"></span>
-
-                            </div>
-
-                            <div
-                                id="previewGrid"
-                                class="preview-grid"
-                            ></div>
-
-                        </div>
-
-
-                        <!-- Consent -->
-                        <div class="consent-box">
-
-                            <input
-                                type="checkbox"
-                                id="consent"
-                                class="consent-checkbox"
-                            >
-
-                            <label for="consent">
-
-                                I give permission for my uploaded
-                                photos to be displayed publicly
-                                on the visitor slideshow.
-
-                            </label>
-
-                        </div>
-
-
-                        <button
-                            type="submit"
-                            class="primary-button"
-                            id="uploadButton"
-                        >
-
-                            <span>
-                                Upload Photos
-                            </span>
-
-                            <span class="button-arrow">
-                                →
-                            </span>
-
-                        </button>
-
-                    </form>
 
                 </div>
 
 
-                <!-- Success -->
-                <div
-                    id="successStep"
-                    class="success-step d-none"
-                >
+                <!-- OPEN CAMERA BUTTON -->
 
-                    <div class="success-icon">
-                        ✓
+                <button
+                    type="button"
+                    id="openCameraButton"
+                    class="camera-button"
+                >
+                    📷 Take a Selfie
+                </button>
+
+
+                <!-- SELFIE PREVIEW -->
+
+                <div
+                    id="selfiePreview"
+                    class="selfie-preview"
+                >
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 NORMAL PHOTO UPLOAD
+            ========================== -->
+
+            <div class="upload-section">
+
+                <div class="section-title">
+
+                    <span>🖼️</span>
+
+                    <div>
+                        <h3>Upload Photos</h3>
+
+                        <p>
+                            You can also select photos from your device
+                        </p>
                     </div>
 
-                    <span class="section-label">
-                        COMPLETE
-                    </span>
+                </div>
 
-                    <h2>
-                        You're all set!
-                    </h2>
+
+                <label
+                    for="photos"
+                    class="upload-box"
+                >
+
+                    <div class="upload-icon">
+                        ⬆️
+                    </div>
+
+                    <h4>Choose Photos</h4>
 
                     <p>
-                        Your photos have been uploaded successfully
-                        and added to the visitor display.
+                        JPG, PNG or WEBP
                     </p>
 
-                    <a
-                        href="/"
-                        class="secondary-button"
-                    >
-                        Register Another Visitor
-                    </a>
+                    <small>
+                        Maximum 10 photos, 5MB each
+                    </small>
 
+                </label>
+
+
+                <input
+                    type="file"
+                    id="photos"
+                    name="photos"
+                    accept="image/jpeg,image/png,image/webp"
+                    multiple
+                    hidden
+                >
+
+
+                <!-- SELECTED PHOTO PREVIEW -->
+
+                <div
+                    id="preview"
+                    class="preview-grid"
+                >
                 </div>
 
+            </div>
 
-                <!-- Message -->
-                <div
-                    id="msg"
-                    class="message-container"
-                ></div>
 
-            </section>
+            <!-- =========================
+                 CONSENT
+            ========================== -->
+
+            <div class="consent-box">
+
+                <input
+                    type="checkbox"
+                    id="consent"
+                    required
+                >
+
+                <label for="consent">
+                    I give permission for my uploaded photos to be
+                    displayed on the visitor display.
+                </label>
+
+            </div>
+
+
+            <!-- =========================
+                 MESSAGE
+            ========================== -->
+
+            <div
+                id="msg"
+                class="message"
+            >
+            </div>
+
+
+            <!-- =========================
+                 SUBMIT BUTTON
+            ========================== -->
+
+            <button
+                type="submit"
+                id="submitButton"
+                class="submit-button"
+            >
+                Submit Photos
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- =========================
+         SUCCESS SCREEN
+    ========================== -->
+
+    <section
+        id="successScreen"
+        class="success-screen d-none"
+    >
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+        <h2>Thank You!</h2>
+
+        <p>
+            Your photos have been uploaded successfully.
+        </p>
+
+        <p>
+            Your memories may appear on the display shortly.
+        </p>
+
+        <button
+            type="button"
+            onclick="location.reload()"
+            class="submit-button"
+        >
+            Register Another Visitor
+        </button>
+
+    </section>
+
+</main>
+
+
+<!-- =====================================================
+     CAMERA MODAL
+====================================================== -->
+
+<div
+    id="cameraModal"
+    class="camera-modal d-none"
+>
+
+    <div class="camera-modal-content">
+
+        <!-- CAMERA HEADER -->
+
+        <div class="camera-modal-header">
+
+            <div>
+                <h3>Take a Selfie</h3>
+
+                <p>
+                    Position your face inside the frame
+                </p>
+            </div>
+
+            <button
+                type="button"
+                id="closeCameraButton"
+                class="close-camera-button"
+            >
+                ×
+            </button>
 
         </div>
 
-    </main>
+
+        <!-- CAMERA VIDEO -->
+
+        <div class="camera-preview-wrapper">
+
+            <video
+                id="cameraVideo"
+                autoplay
+                playsinline
+                muted
+            >
+            </video>
+
+            <div class="camera-frame"></div>
+
+        </div>
 
 
-    <!-- Footer -->
-    <footer class="page-footer">
+        <!-- CAMERA CONTROLS -->
 
-        <span>
-            Visitor Moments
-        </span>
+        <div class="camera-controls">
 
-        <span>
-            •
-        </span>
+            <button
+                type="button"
+                id="capturePhotoButton"
+                class="capture-button"
+            >
+                📷 Capture Photo
+            </button>
 
-        <span>
-            Your moments. Our memories.
-        </span>
+        </div>
 
-    </footer>
+    </div>
+
+</div>
 
 
-    <!-- JavaScript -->
-    <script src="/js/app.js"></script>
+<script src="/js/app.js"></script>
 
 </body>
-
 </html>
