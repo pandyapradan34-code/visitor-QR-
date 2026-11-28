@@ -10,7 +10,8 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Visitor Moments | Live Display</title>
+    <title>Visitor Moments</title>
+
 
     <link
         rel="stylesheet"
@@ -20,66 +21,81 @@
 </head>
 
 
-<body class="display-body">
+<body>
 
 
-    <!-- Brand -->
-    <header class="display-header">
+    <!-- ==========================================
+         MAIN DISPLAY
+    =========================================== -->
 
-        <div class="display-brand">
+    <main class="display-page">
 
-            <div class="display-logo">
-                VM
-            </div>
 
-            <div>
+        <!-- TOP BAR -->
 
-                <div class="display-brand-name">
-                    Visitor Moments
+        <header class="topbar">
+
+            <div class="brand">
+
+                <div class="brand-logo">
+                    VM
                 </div>
 
-                <div class="display-brand-subtitle">
-                    Capture · Share · Remember
+
+                <div>
+
+                    <h1>
+                        Visitor Moments
+                    </h1>
+
+                    <p>
+                        Capture • Share • Remember
+                    </p>
+
                 </div>
 
             </div>
 
-        </div>
+
+            <div class="live-status">
+
+                <span class="live-dot"></span>
+
+                <span>
+                    LIVE
+                </span>
+
+            </div>
+
+        </header>
 
 
-        <div class="live-status">
 
-            <span class="live-dot"></span>
+        <!-- ======================================
+             EMPTY STATE
+        ======================================= -->
 
-            <span>LIVE</span>
-
-        </div>
-
-    </header>
-
-
-
-    <!-- Empty State -->
-    <section
-        id="empty"
-        class="empty-display"
-    >
-
-        <div class="empty-content">
+        <section
+            id="empty"
+            class="empty-state"
+        >
 
             <div class="empty-icon">
                 📸
             </div>
 
-            <h1>
-                Visitor Moments
-            </h1>
+
+            <h2>
+                Waiting for the next visitor
+            </h2>
+
 
             <p>
-                Waiting for the next visitor photo...
+                New visitor photos will appear here automatically.
             </p>
 
-            <div class="waiting-indicator">
+
+            <div class="loading-dots">
 
                 <span></span>
                 <span></span>
@@ -87,86 +103,139 @@
 
             </div>
 
-        </div>
-
-    </section>
+        </section>
 
 
 
-    <!-- Slideshow -->
-    <main
-        id="slide"
-        class="slide d-none"
-    >
+        <!-- ======================================
+             PHOTO DISPLAY
+        ======================================= -->
 
-        <div class="photo-container">
+        <section
+            id="gallery"
+            class="gallery d-none"
+        >
 
-            <img
-                id="slideImg"
-                src=""
-                alt="Visitor photo"
+
+            <!-- VISITOR INFO -->
+
+            <div class="visitor-info">
+
+                <div class="welcome-text">
+                    Welcome
+                </div>
+
+
+                <h2 id="visitorName">
+                    Visitor
+                </h2>
+
+
+                <div class="photo-count">
+                    <span id="photoNumber">
+                        1
+                    </span>
+
+                    <span>
+                        /
+                    </span>
+
+                    <span id="photoTotal">
+                        1
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- MAIN PHOTO -->
+
+            <div class="photo-area">
+
+
+                <button
+                    id="previousButton"
+                    class="navigation-button previous"
+                    aria-label="Previous photo"
+                >
+                    ‹
+                </button>
+
+
+                <div class="main-photo-wrapper">
+
+                    <img
+                        id="mainPhoto"
+                        src=""
+                        alt="Visitor photo"
+                    >
+
+                </div>
+
+
+                <button
+                    id="nextButton"
+                    class="navigation-button next"
+                    aria-label="Next photo"
+                >
+                    ›
+                </button>
+
+
+            </div>
+
+
+
+            <!-- THUMBNAILS -->
+
+            <div
+                id="thumbnailContainer"
+                class="thumbnail-container"
             >
-
-        </div>
-
-
-        <div class="photo-overlay"></div>
-
-
-        <div class="photo-caption">
-
-            <div class="welcome-label">
-                WELCOME
             </div>
 
-            <h1 id="visitorName">
-            </h1>
-
-            <p>
-                Thank you for being part of
-                our special moments.
-            </p>
-
-        </div>
 
 
-        <div class="photo-counter">
+            <!-- PROGRESS -->
 
-            <span id="currentPhoto">
-                1
+            <div class="progress-container">
+
+                <div
+                    id="progressBar"
+                    class="progress-bar"
+                >
+                </div>
+
+            </div>
+
+
+            <div class="auto-play-text">
+                Auto playing visitor memories
+            </div>
+
+
+        </section>
+
+
+
+        <!-- FOOTER -->
+
+        <footer class="display-footer">
+
+            <span>
+                Visitor Moments
             </span>
 
-            <span class="counter-divider">
-                /
+            <span>
+                Memories that stay
             </span>
 
-            <span id="totalPhotos">
-                1
-            </span>
+        </footer>
 
-        </div>
 
     </main>
-
-
-
-    <!-- Footer -->
-    <footer class="display-footer">
-
-        <span>
-            Visitor Moments
-        </span>
-
-        <span>
-            •
-        </span>
-
-        <span>
-            Live Visitor Slideshow
-        </span>
-
-    </footer>
-
 
 
     <script src="/js/display.js"></script>
