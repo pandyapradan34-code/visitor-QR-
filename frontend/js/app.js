@@ -141,6 +141,9 @@ async function registerVisitor() {
         const data = await response.json();
 
 
+        console.log("Visitor registration response:", data);
+
+
         if (!response.ok) {
 
             throw new Error(
@@ -150,14 +153,57 @@ async function registerVisitor() {
         }
 
 
-        visitorId = data.visitor_id || data.id;
+        // ------------------------------------------------
+        // Get visitor ID from backend response
+        // ------------------------------------------------
+
+        visitorId =
+            data.visitor_id ??
+            data.visitorId ??
+            data.id ??
+            data.visitor?.visitor_id ??
+            data.visitor?.visitorId ??
+            data.visitor?.id ??
+            null;
+
+
+        console.log("Visitor ID received:", visitorId);
+
+
+        // ------------------------------------------------
+        // Make sure we actually received an ID
+        // ------------------------------------------------
+
+        if (
+            visitorId === null ||
+            visitorId === undefined ||
+            visitorId === "" ||
+            Number.isNaN(Number(visitorId))
+        ) {
+
+            console.error(
+                "Backend did not return a valid visitor ID.",
+                data
+            );
+
+
+            throw new Error(
+                "Visitor was registered, but no visitor ID was returned by the server."
+            );
+
+        }
+
+
+        // Convert to number because MySQL visitor_id is integer
+
+        visitorId = Number(visitorId);
 
 
         return true;
 
     } catch (error) {
 
-        console.error(error);
+        console.error("Visitor registration error:", error);
 
         showMessage(
             error.message || "Unable to register visitor."
@@ -226,7 +272,6 @@ function createPreview(file) {
 
 
         wrapper.appendChild(image);
-
 
         previewContainer.appendChild(wrapper);
 
@@ -298,7 +343,6 @@ function addFiles(files) {
 
     refreshPreviews();
 
-
     updateInputFiles();
 
 }
@@ -329,13 +373,16 @@ function updateInputFiles() {
 // NORMAL PHOTO UPLOAD SELECTION
 // ======================================================
 
-photosInput.addEventListener("change", function (event) {
+photosInput.addEventListener(
+    "change",
+    function (event) {
 
-    clearMessage();
+        clearMessage();
 
-    addFiles(event.target.files);
+        addFiles(event.target.files);
 
-});
+    }
+);
 
 
 // ======================================================
@@ -349,8 +396,10 @@ openCameraButton.addEventListener(
         clearMessage();
 
 
-        if (!navigator.mediaDevices ||
-            !navigator.mediaDevices.getUserMedia) {
+        if (
+            !navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia
+        ) {
 
             showMessage(
                 "Camera is not supported by this browser."
@@ -367,13 +416,17 @@ openCameraButton.addEventListener(
                 await navigator.mediaDevices.getUserMedia({
 
                     video: {
+
                         facingMode: "user",
+
                         width: {
                             ideal: 1280
                         },
+
                         height: {
                             ideal: 720
                         }
+
                     },
 
                     audio: false
@@ -430,13 +483,13 @@ function closeCamera() {
 
     if (cameraStream) {
 
-        cameraStream.getTracks().forEach(
-            function (track) {
+        cameraStream
+            .getTracks()
+            .forEach(function (track) {
 
                 track.stop();
 
-            }
-        );
+            });
 
         cameraStream = null;
 
@@ -444,7 +497,6 @@ function closeCamera() {
 
 
     cameraVideo.srcObject = null;
-
 
     cameraModal.classList.add("d-none");
 
@@ -500,16 +552,17 @@ capturePhotoButton.addEventListener(
         }
 
 
-        // Create canvas
+        const canvas =
+            document.createElement("canvas");
 
-        const canvas = document.createElement("canvas");
 
         canvas.width = videoWidth;
 
         canvas.height = videoHeight;
 
 
-        const context = canvas.getContext("2d");
+        const context =
+            canvas.getContext("2d");
 
 
         // Mirror selfie
@@ -544,8 +597,6 @@ capturePhotoButton.addEventListener(
                 }
 
 
-                // Check maximum photos
-
                 if (selectedFiles.length >= 10) {
 
                     showMessage(
@@ -559,37 +610,26 @@ capturePhotoButton.addEventListener(
                 }
 
 
-                // Create File
+                const selfieFile =
+                    new File(
 
-                const selfieFile = new File(
+                        [blob],
 
-                    [blob],
+                        `selfie-${Date.now()}.jpg`,
 
-                    `selfie-${Date.now()}.jpg`,
+                        {
+                            type: "image/jpeg"
+                        }
 
-                    {
-                        type: "image/jpeg"
-                    }
+                    );
 
-                );
-
-
-                // Add selfie
 
                 selectedFiles.push(selfieFile);
 
 
-                // Update file input
-
                 updateInputFiles();
 
-
-                // Show previews
-
                 refreshPreviews();
-
-
-                // Close camera
 
                 closeCamera();
 
@@ -642,7 +682,9 @@ visitorForm.addEventListener(
         clearMessage();
 
 
+        // ------------------------------------------------
         // Check photos
+        // ------------------------------------------------
 
         if (selectedFiles.length === 0) {
 
@@ -655,7 +697,9 @@ visitorForm.addEventListener(
         }
 
 
+        // ------------------------------------------------
         // Check consent
+        // ------------------------------------------------
 
         if (!consentInput.checked) {
 
@@ -667,8 +711,6 @@ visitorForm.addEventListener(
 
         }
 
-
-        // Disable button
 
         submitButton.disabled = true;
 
@@ -702,7 +744,34 @@ visitorForm.addEventListener(
 
 
             // ==========================================
-            // STEP 2 - UPLOAD PHOTOS
+            // FINAL SAFETY CHECK
+            // ==========================================
+
+            if (
+                visitorId === null ||
+                visitorId === undefined ||
+                visitorId === "" ||
+                Number.isNaN(Number(visitorId))
+            ) {
+
+                throw new Error(
+                    "Visitor ID is missing. Photo upload was stopped."
+                );
+
+            }
+
+
+            visitorId = Number(visitorId);
+
+
+            console.log(
+                "Uploading photos for visitor ID:",
+                visitorId
+            );
+
+
+            // ==========================================
+            // STEP 2 - CREATE FORM DATA
             // ==========================================
 
             const formData = new FormData();
@@ -710,7 +779,13 @@ visitorForm.addEventListener(
 
             formData.append(
                 "visitor_id",
-                visitorId
+                String(visitorId)
+            );
+
+
+            formData.append(
+                "consent",
+                "true"
             );
 
 
@@ -726,6 +801,10 @@ visitorForm.addEventListener(
             );
 
 
+            // ==========================================
+            // STEP 3 - UPLOAD PHOTOS
+            // ==========================================
+
             const response =
                 await fetch(
                     "/api/photos",
@@ -738,6 +817,12 @@ visitorForm.addEventListener(
 
             const data =
                 await response.json();
+
+
+            console.log(
+                "Photo upload response:",
+                data
+            );
 
 
             if (!response.ok) {
@@ -754,19 +839,22 @@ visitorForm.addEventListener(
             // SUCCESS
             // ==========================================
 
-            document.getElementById(
-                "visitorForm"
-            ).classList.add("d-none");
+            document
+                .getElementById("visitorForm")
+                .classList.add("d-none");
 
 
-            document.getElementById(
-                "successScreen"
-            ).classList.remove("d-none");
+            document
+                .getElementById("successScreen")
+                .classList.remove("d-none");
 
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "Photo upload error:",
+                error
+            );
 
 
             showMessage(
