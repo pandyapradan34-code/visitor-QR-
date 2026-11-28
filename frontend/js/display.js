@@ -2,7 +2,6 @@
 // VISITOR MOMENTS DISPLAY
 // ======================================================
 
-
 const emptyState =
     document.getElementById("empty");
 
@@ -52,14 +51,86 @@ let progressTimer = null;
 
 let autoSlideTimer = null;
 
-
-// Time for each photo
-
 const PHOTO_DURATION = 8000;
 
 
 // ======================================================
-// LOAD NEW PHOTOS FROM QUEUE
+// BUILD IMAGE URL
+// ======================================================
+
+function getImageUrl(filePath) {
+
+    if (!filePath) {
+        return "";
+    }
+
+
+    // Already a complete URL
+
+    if (
+        filePath.startsWith("http://") ||
+        filePath.startsWith("https://")
+    ) {
+
+        return filePath;
+
+    }
+
+
+    // Make sure relative paths start with /
+
+    if (!filePath.startsWith("/")) {
+
+        filePath = "/" + filePath;
+
+    }
+
+
+    return window.location.origin + filePath;
+
+}
+
+
+// ======================================================
+// CHECK IF IMAGE CAN LOAD
+// ======================================================
+
+function checkImage(url) {
+
+    return new Promise(function (resolve) {
+
+        const image =
+            new Image();
+
+
+        image.onload = function () {
+
+            resolve(true);
+
+        };
+
+
+        image.onerror = function () {
+
+            console.error(
+                "Image failed to load:",
+                url
+            );
+
+            resolve(false);
+
+        };
+
+
+        image.src = url;
+
+    });
+
+}
+
+
+// ======================================================
+// LOAD QUEUE
 // ======================================================
 
 async function loadQueue() {
@@ -99,72 +170,83 @@ async function loadQueue() {
         }
 
 
-        if (!data.photos.length) {
+        if (data.photos.length === 0) {
 
             return;
 
         }
 
 
-        /*
-         * Group pending photos by visitor.
-         *
-         * This means if one visitor uploads
-         * 4 photos, they are treated as one
-         * visitor gallery instead of 4 separate
-         * visitors.
-         */
+        // ------------------------------------------
+        // GROUP PHOTOS BY VISITOR
+        // ------------------------------------------
 
         const visitorGroups = {};
 
 
         data.photos.forEach(function (photo) {
 
-            if (!visitorGroups[photo.visitor_id]) {
+            const visitorId =
+                photo.visitor_id;
 
-                visitorGroups[photo.visitor_id] = [];
+
+            if (!visitorGroups[visitorId]) {
+
+                visitorGroups[visitorId] = [];
 
             }
 
 
-            visitorGroups[photo.visitor_id].push(photo);
+            visitorGroups[visitorId].push(
+                photo
+            );
 
         });
 
 
-        /*
-         * Add each visitor only once to the
-         * display queue.
-         */
+        // ------------------------------------------
+        // ADD VISITORS TO QUEUE
+        // ------------------------------------------
 
-        Object.keys(visitorGroups).forEach(function (visitorId) {
+        Object.keys(visitorGroups).forEach(
+            function (visitorId) {
 
-            const existing =
-                queue.find(
-                    item =>
-                        String(item.visitor_id) ===
-                        String(visitorId)
-                );
+                const alreadyQueued =
+                    queue.some(
+                        function (item) {
+
+                            return String(
+                                item.visitor_id
+                            ) === String(visitorId);
+
+                        }
+                    );
 
 
-            if (!existing) {
+                if (!alreadyQueued) {
 
-                queue.push({
+                    const visitorPhotos =
+                        visitorGroups[visitorId];
 
-                    visitor_id: Number(visitorId),
 
-                    visitor_name:
-                        visitorGroups[visitorId][0]
-                            .visitor_name,
+                    queue.push({
 
-                    queue_items:
-                        visitorGroups[visitorId]
+                        visitor_id:
+                            Number(visitorId),
 
-                });
+                        visitor_name:
+                            visitorPhotos[0]
+                                .visitor_name,
+
+                        queue_items:
+                            visitorPhotos
+
+                    });
+
+                }
 
             }
-
-        });
+        );
 
 
         if (!isPlaying) {
@@ -186,7 +268,7 @@ async function loadQueue() {
 
 
 // ======================================================
-// GET COMPLETE VISITOR GALLERY
+// GET ALL PHOTOS FOR VISITOR
 // ======================================================
 
 async function getVisitorGallery(visitorId) {
@@ -202,7 +284,7 @@ async function getVisitorGallery(visitorId) {
         if (!response.ok) {
 
             throw new Error(
-                "Unable to load visitor photos"
+                "Unable to load visitor gallery"
             );
 
         }
@@ -245,6 +327,71 @@ async function getVisitorGallery(visitorId) {
 
 
 // ======================================================
+// FILTER VALID IMAGES
+// ======================================================
+
+async function getValidPhotos(photos) {
+
+    const validPhotos = [];
+
+
+    for (
+        const photo of photos
+    ) {
+
+        const imageUrl =
+            getImageUrl(
+                photo.file_path
+            );
+
+
+        if (!imageUrl) {
+
+            console.warn(
+                "Photo has no file path:",
+                photo
+            );
+
+            continue;
+
+        }
+
+
+        const isValid =
+            await checkImage(
+                imageUrl
+            );
+
+
+        if (isValid) {
+
+            validPhotos.push({
+
+                ...photo,
+
+                display_url:
+                    imageUrl
+
+            });
+
+        } else {
+
+            console.warn(
+                "Skipping broken photo:",
+                photo
+            );
+
+        }
+
+    }
+
+
+    return validPhotos;
+
+}
+
+
+// ======================================================
 // PLAY NEXT VISITOR
 // ======================================================
 
@@ -271,14 +418,9 @@ async function playNextVisitor() {
         visitor;
 
 
-    /*
-     * Fetch ALL photos belonging to this
-     * visitor.
-     *
-     * This is what allows returning visitors
-     * to see their old photos together with
-     * their new photos.
-     */
+    // ------------------------------------------
+    // GET ALL OLD + NEW PHOTOS
+    // ------------------------------------------
 
     const galleryData =
         await getVisitorGallery(
@@ -288,7 +430,8 @@ async function playNextVisitor() {
 
     if (
         !galleryData ||
-        !galleryData.photos.length
+        !galleryData.photos ||
+        galleryData.photos.length === 0
     ) {
 
         isPlaying = false;
@@ -300,51 +443,107 @@ async function playNextVisitor() {
     }
 
 
+    console.log(
+        "All visitor photos:",
+        galleryData.photos
+    );
+
+
+    // ------------------------------------------
+    // REMOVE BROKEN IMAGES
+    // ------------------------------------------
+
     currentGallery =
-        galleryData.photos;
+        await getValidPhotos(
+            galleryData.photos
+        );
+
+
+    console.log(
+        "Valid visitor photos:",
+        currentGallery
+    );
+
+
+    // ------------------------------------------
+    // NO VALID PHOTOS
+    // ------------------------------------------
+
+    if (
+        currentGallery.length === 0
+    ) {
+
+        console.error(
+            "No valid photos available for visitor:",
+            visitor.visitor_id
+        );
+
+
+        isPlaying = false;
+
+        playNextVisitor();
+
+        return;
+
+    }
 
 
     currentIndex = 0;
 
 
+    // ------------------------------------------
+    // VISITOR NAME
+    // ------------------------------------------
+
     visitorName.textContent =
         galleryData.visitor.name;
 
+
+    // ------------------------------------------
+    // PHOTO COUNT
+    // ------------------------------------------
 
     photoTotal.textContent =
         currentGallery.length;
 
 
-    /*
-     * Show gallery
-     */
+    // ------------------------------------------
+    // SHOW GALLERY
+    // ------------------------------------------
 
-    emptyState.classList.add("d-none");
+    emptyState.classList.add(
+        "d-none"
+    );
 
-    gallery.classList.remove("d-none");
+    gallery.classList.remove(
+        "d-none"
+    );
 
+
+    // ------------------------------------------
+    // CREATE THUMBNAILS
+    // ------------------------------------------
 
     createThumbnails();
+
+
+    // ------------------------------------------
+    // SHOW FIRST VALID PHOTO
+    // ------------------------------------------
 
     showPhoto(0);
 
 
-    /*
-     * Wait until all photos have been
-     * displayed before moving to the
-     * next visitor.
-     */
+    // ------------------------------------------
+    // START SLIDESHOW
+    // ------------------------------------------
 
     await startGallerySlideshow();
 
 
-    /*
-     * Mark the NEW queue photos as displayed.
-     *
-     * Old photos do not have pending queue
-     * entries and therefore don't need to
-     * be marked.
-     */
+    // ------------------------------------------
+    // MARK NEW PHOTOS DISPLAYED
+    // ------------------------------------------
 
     await markQueueItemsDisplayed(
         visitor.queue_items
@@ -357,10 +556,6 @@ async function playNextVisitor() {
 
     isPlaying = false;
 
-
-    /*
-     * Small delay before next visitor
-     */
 
     setTimeout(
         function () {
@@ -391,7 +586,7 @@ function createThumbnails() {
 
 
             thumbnail.src =
-                photo.file_path;
+                photo.display_url;
 
 
             thumbnail.className =
@@ -431,7 +626,7 @@ function createThumbnails() {
 function showPhoto(index) {
 
     if (
-        !currentGallery.length
+        currentGallery.length === 0
     ) {
 
         return;
@@ -439,9 +634,7 @@ function showPhoto(index) {
     }
 
 
-    /*
-     * Keep index inside the gallery range.
-     */
+    // Keep index valid
 
     if (index < 0) {
 
@@ -467,9 +660,13 @@ function showPhoto(index) {
         currentGallery[currentIndex];
 
 
-    /*
-     * Fade image out
-     */
+    console.log(
+        "Displaying photo:",
+        photo.display_url
+    );
+
+
+    // Fade out
 
     mainPhoto.classList.add(
         "changing"
@@ -480,7 +677,7 @@ function showPhoto(index) {
         function () {
 
             mainPhoto.src =
-                photo.file_path;
+                photo.display_url;
 
 
             mainPhoto.onload =
@@ -492,8 +689,57 @@ function showPhoto(index) {
 
                 };
 
+
+            mainPhoto.onerror =
+                function () {
+
+                    console.error(
+                        "Main image failed:",
+                        photo.display_url
+                    );
+
+
+                    // Skip broken image
+
+                    currentGallery.splice(
+                        currentIndex,
+                        1
+                    );
+
+
+                    photoTotal.textContent =
+                        currentGallery.length;
+
+
+                    if (
+                        currentGallery.length === 0
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    if (
+                        currentIndex >=
+                        currentGallery.length
+                    ) {
+
+                        currentIndex = 0;
+
+                    }
+
+
+                    createThumbnails();
+
+                    showPhoto(
+                        currentIndex
+                    );
+
+                };
+
         },
-        180
+        150
     );
 
 
@@ -523,7 +769,10 @@ function updateThumbnails() {
 
 
     thumbnails.forEach(
-        function (thumbnail, index) {
+        function (
+            thumbnail,
+            index
+        ) {
 
             if (
                 index === currentIndex
@@ -548,7 +797,7 @@ function updateThumbnails() {
 
 
 // ======================================================
-// START GALLERY SLIDESHOW
+// START SLIDESHOW
 // ======================================================
 
 function startGallerySlideshow() {
@@ -556,14 +805,12 @@ function startGallerySlideshow() {
     return new Promise(
         function (resolve) {
 
-            let completedCycles = 0;
+            let photoCounter = 0;
 
 
-            /*
-             * If there is only one photo,
-             * display it for the normal
-             * duration.
-             */
+            // --------------------------------------
+            // ONE PHOTO
+            // --------------------------------------
 
             if (
                 currentGallery.length === 1
@@ -590,19 +837,14 @@ function startGallerySlideshow() {
             }
 
 
-            let photoCounter = 0;
-
+            // --------------------------------------
+            // MULTIPLE PHOTOS
+            // --------------------------------------
 
             function showNext() {
 
                 photoCounter++;
 
-
-                /*
-                 * After every photo has been
-                 * shown once, finish this
-                 * visitor's gallery.
-                 */
 
                 if (
                     photoCounter >=
@@ -671,7 +913,9 @@ function startGallerySlideshow() {
 // PROGRESS BAR
 // ======================================================
 
-function startProgressBar(duration) {
+function startProgressBar(
+    duration
+) {
 
     stopProgressBar();
 
@@ -703,7 +947,6 @@ function startProgressBar(duration) {
 
                 progressBar.style.width =
                     percentage + "%";
-
 
             },
             50
@@ -751,11 +994,6 @@ function resetAutoSlide() {
     stopProgressBar();
 
 
-    /*
-     * Manual navigation should not break
-     * the gallery.
-     */
-
     startProgressBar(
         PHOTO_DURATION
     );
@@ -801,7 +1039,7 @@ previousButton.addEventListener(
     function () {
 
         if (
-            !currentGallery.length
+            currentGallery.length === 0
         ) {
 
             return;
@@ -842,7 +1080,7 @@ nextButton.addEventListener(
     function () {
 
         if (
-            !currentGallery.length
+            currentGallery.length === 0
         ) {
 
             return;
@@ -875,7 +1113,7 @@ nextButton.addEventListener(
 
 
 // ======================================================
-// MARK QUEUE ITEMS AS DISPLAYED
+// MARK QUEUE ITEMS DISPLAYED
 // ======================================================
 
 async function markQueueItemsDisplayed(
@@ -884,7 +1122,7 @@ async function markQueueItemsDisplayed(
 
     if (
         !queueItems ||
-        !queueItems.length
+        queueItems.length === 0
     ) {
 
         return;
@@ -894,8 +1132,11 @@ async function markQueueItemsDisplayed(
 
     const queueIds =
         queueItems.map(
-            item =>
-                item.queue_id
+            function (item) {
+
+                return item.queue_id;
+
+            }
         );
 
 
@@ -922,14 +1163,14 @@ async function markQueueItemsDisplayed(
 
 
         console.log(
-            "Marked queue items as displayed:",
+            "Marked displayed:",
             queueIds
         );
 
     } catch (error) {
 
         console.error(
-            "Unable to mark queue items:",
+            "Unable to mark photos displayed:",
             error
         );
 
@@ -946,7 +1187,7 @@ loadQueue();
 
 
 // ======================================================
-// CHECK FOR NEW VISITORS EVERY 3 SECONDS
+// CHECK FOR NEW PHOTOS
 // ======================================================
 
 setInterval(
